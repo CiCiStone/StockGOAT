@@ -29,6 +29,8 @@ dataset/*.err
 skills/stock-drop-filter/data/*.json
 skills/stock-drop-filter/output/
 *.html.tmp
+*.log
+*.err
 
 # ===== IDE / 系统 =====
 .idea/
