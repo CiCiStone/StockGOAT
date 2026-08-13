@@ -1,0 +1,66 @@
+{
+  "skill": "hold-or-cut-exit",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我那票已经赚了30%了，这两天开始往回撤，要不要先落袋为安？",
+      "expected_behavior": "应激活 hold-or-cut-exit, 走持盈路径：先确认基本面是否拐点（依赖 prosperity-and-inflection），未拐点则不卖、把回撤当噪音、提醒不逃顶",
+      "notes": "正面场景：浮盈焦虑型（A2-1）。用户纠结30%浮盈+回撤要不要止盈，正是本 skill 核心——把'卖不卖'转成'基本面拐没拐'的事实判断。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "It's down almost 40% from the top, I'm panicking, should I just cut it before it gets worse?",
+      "expected_behavior": "应激活 hold-or-cut-exit, 先判基本面拐点：未拐点则持盈死拿（回撤是噪音），已拐点或逻辑看错则立即砍仓",
+      "notes": "正面场景：回撤恐慌型（A2-2）。英文口吻，40%回撤恐慌求卖。本 skill 强调30%-40%是超级成长股涨10倍途中的正常回撤，但若基本面已拐则必须砍——先判后动。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "涨这么多了，感觉差不多到顶了吧，要不要先逃顶躲一波回撤再接回来？我老是卖早。",
+      "expected_behavior": "应激活 hold-or-cut-exit, 持盈路径：明确反对逃顶（顶部唯一、逃顶千次只对一次），除非基本面拐点否则死拿；'老卖早'正是卖飞主升浪的信号",
+      "notes": "正面场景：逃顶幻想型（A2-4）+ 自陈'总是卖早'（语言信号）。作者铁律'卖飞比套牢更致命'直接命中。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这个行业的景气度是不是已经见顶了？白酒去库到底拐没拐？",
+      "expected_behavior": "不应激活本 skill, 应激活 prosperity-and-inflection（本 skill 依赖它先识别拐点，自己不预测拐点）",
+      "notes": "跨 skill 诱饵（硬性要求）：用户问的是'拐点到了吗'的识别问题，本 skill 只解决'识别出拐点后怎么卖'的执行问题。SKILL.md B 段明确：用户还没确认拐点时应先调 prosperity-and-inflection。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这只票我准备建仓，回调到什么位置可以买第一笔，总共分几仓合适？",
+      "expected_behavior": "不应激活本 skill, 应激活 scale-in-and-risk-control（买入侧 + 仓位结构问题，非持有/卖出侧）",
+      "notes": "跨 skill 诱饵：纯买入决策（B 段反场景）。scale-in 管回调分批与两条红线、本 skill 管卖不卖，两者在'越跌越补'有交接面但分工不同。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "今晚随便找个下饭的剧看看，有没有那种节奏不费脑的推荐？",
+      "expected_behavior": "不应激活本 skill, 与任何投资 skill 都无关",
+      "notes": "无关诱饵：纯生活类闲聊，用于校验本 skill 不会对无关话题误触发。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我这票浮亏40%了，朋友说设个-15%的移动止损早就该砍了，我现在到底按技术面止损还是看基本面？",
+      "expected_behavior": "边界判断：本 skill 不提供任何价格/技术形态触发的止损规则，应明确告知作者锚定基本面拐点、反对移动止损/破位卖出；但同时若该标的基本面已恶化或买入逻辑看错，则按本 skill 立即砍仓。需说清：技术止损 vs 基本面拐点是两套互斥体系。",
+      "notes": "B 段边界：技术止盈止损 vs 基本面拐点（B 段'容易混淆的邻近方法论'）。用户带着'设止损线'的预期来，需点破体系冲突，而非简单触发或拒绝。"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "跌了50%我一直在死拿，越套越深，这难道不就是长期持有吗？",
+      "expected_behavior": "边界判断：需先做步骤 0 前置——这是不是超级成长股、买入逻辑还在不在。若标的本就买错或已不是超级成长股，'死拿'是毁灭性的（B 段盲点：死拿在买错时加速亏损），应转 real-vs-fake-value-investing 判伪价投并砍仓；若仍是合格超级成长股且景气不变，则属持盈路径。",
+      "notes": "B 段边界：'死拿'在买错时的毁灭性（作者盲点批判）。与 real-vs-fake-value-investing 接壤——'用长期持有包装死扛=伪价投'，需诚实区分持盈与死扛。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 8 条：3 should_trigger + 3 should_not_trigger + 2 edge_case。全部 should_not_trigger 必须通过（诱饵容错为 0），其中 2 条为同书兄弟 skill 跨 skill 混淆诱饵：① prosperity-and-inflection（拐点识别 vs 卖出执行），② scale-in-and-risk-control（买入侧 vs 卖出侧）。edge_case 覆盖 B 段两个核心边界：技术止盈止损 vs 基本面拐点、'死拿'在买错时的毁灭性。所有 prompt 用真实口语一句话、无技术词，中英混合（should-trigger-02 为英文口吻）。浮亏摊平场景（A2-3）已在 edge-02 + should-not-trigger-02 中覆盖，故未单列。"
+}

@@ -1,0 +1,73 @@
+{
+  "skill": "deliberate-observation",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》— 静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "最近商场里好想来零食店到处都在排队，一个新品牌突然就火成这样，这种能不能买它股票啊？",
+      "expected_behavior": "应激活 deliberate-observation，识别为典型的'过去没有 + 当下突然爆火 + 快速普及'消费业态信号，按四步走：确认信号特征 → 反查上市母公司（万辰集团）→ 财报验证成长性 → 判可持续性后再谈介入。",
+      "notes": "正面场景：A2 街头/商场观察，命中语言信号'到处都是/突然火了/能不能买股票'，且为消费品类（普通人主场）。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "刷抖音这阵子扫地机器人视频一个接一个 push 到我，感觉这玩意儿一下子 viral 了，我该怎么顺着这个找标的？",
+      "expected_behavior": "应激活 deliberate-observation，识别为网购/短视频渠道的爆火信号（渠道本身也是'新'），引导用户从产品反查上市公司（如科沃斯），再走财报验证链路。",
+      "notes": "正面场景：A2 短视频场景，中英混合（viral），命中'一下子火了/怎么找标的'。渠道驱动爆火在 A1 案例 3 中明确属信号。"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我一个普通上班族，没啥内幕消息，就想问怎么从日常生活里发现那种能涨十倍的牛股？",
+      "expected_behavior": "应激活 deliberate-observation，落地为'刻意观察法'方法论讲解——建立扫描反射、五新放大镜、定位上市主体、财报验证，并强调消费是普通人主场。",
+      "notes": "正面场景：A2 选股方法咨询，命中'普通人怎么选/从生活里发现牛股'，是方法论入口型触发。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "去成都出差发现街头一种现制酸奶品牌当地排疯了的队，我们这儿还没有，这是不是个机会？",
+      "expected_behavior": "应激活 deliberate-observation，识别为异地观察的爆火信号（'本地还没普及 + 当地火爆'），引导用户反查上市主体并做财报验证，同时提示消费观察有滞后性需警惕。",
+      "notes": "正面场景：A2 旅行/异地观察，命中'排疯了的队/是不是机会'，且隐含早期布局诉求。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我不想满世界逛找线索，能不能直接教我怎么扒财报里的关键词，从财务数据里把牛股筛出来？",
+      "expected_behavior": "不应激活本 skill，应激活 financial-report-signals。线索来源是财报扫描而非生活观察，方向相反（逆向筛选 vs 正向发现）。",
+      "notes": "跨 skill 诱饵（硬性要求）：指向同书兄弟 skill financial-report-signals。两者是发现路径的对比（contrasts-with），用户明确要从财报切入，刻意观察法不适用。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这轮 AI 算力行情我已经看好几个月了，光模块和 PCB 都在疯涨，你帮我判断一下这波该选哪家龙头？",
+      "expected_behavior": "不应激活本 skill，应激活 industry-alpha-locking（或叠加周期法）。焦点已在已知景气行业、要锁定核心 α，而非'从生活里找新爆火信号'；且光模块/PCB 是 B 端工业品，普通人无法从生活观察。",
+      "notes": "跨 skill 诱饵 + B 段边界双重命中：①发现后才是锁定（指向 industry-alpha-locking）；②B 端/工业品赛道明确排除在本 skill 之外（B 段：光模块/PCB/算力应走财报法或 α 锁定法）。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "钢铁和航运这类周期股，现在价格到底部了吗，是不是该拐头往上了？",
+      "expected_behavior": "不应激活本 skill，应用 industry-alpha-locking + 周期法。这是周期股拐点判断，不是消费观察的目标信号。",
+      "notes": "B 段边界 + 无关诱饵：B 段首条明确排除周期股拐点（'观察钢铁/化工/航运价格变化是周期法的事'），与本 skill 的消费爆火信号无关。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我楼下那个网红蛋糕店上个月还排长队，这个月就没人了，这种突然火一阵子的能投资吗？",
+      "expected_behavior": "可激活本 skill 但应在第 1 步（确认信号特征）或第 4 步（判可持续性）否决。明确告知'爆火 ≠ 可持续'，网红产品退潮正是 B 段盲点（幸存者偏差）的体现，建议放弃并转入持续观察，不要倒推故事硬套。",
+      "notes": "边界（B 段核心盲点）：测试模型能否区分'突然爆火'与'长期趋势'。已退潮的网红属伪信号，正确处理是否决而非介入。"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "我已经查清楚某款爆火新茶饮背后是哪家上市公司了，就想知道这家公司到底算不算超级成长股、值不值得买？",
+      "expected_behavior": "本 skill 可作为入口承接（已完成'定位上市主体'步骤），但应明确移交：成长性判定走 super-growth-stock-criteria（六条标准），介入时机走 scale-in-and-risk-control。刻意观察法只解决'线索从哪来'，不解决'质地够不够/何时买'。",
+      "notes": "边界（链路下游移交）：用户已完成观察法的核心产出（定位公司），下一步跨出本 skill 范围。测试模型能否识别'观察法只产生线索不产生结论'并正确 handoff，而非越界包揽质地判断与买卖点。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 9 条：4 should_trigger + 3 should_not_trigger（含 2 条跨 skill 诱饵，分别指向 financial-report-signals【对比发现路径】与 industry-alpha-locking【发现后才是锁定 / B端赛道排除】）+ 2 edge_case（爆火≠可持续、已定位公司后的链路移交）。所有 should_not_trigger 必须通过（诱饵容错为 0）。should_trigger 覆盖 A2 的商场/短视频/异地/方法论四类场景，语言信号命中'突然火/到处都是/排队/能不能买股票/从生活找牛股/viral'。edge_case 测试 B 段两个关键边界：幸存者偏差（伪信号否决）与观察法的能力边界（不解决质地与买卖点）。"
+}

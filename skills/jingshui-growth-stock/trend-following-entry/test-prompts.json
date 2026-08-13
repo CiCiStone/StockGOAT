@@ -1,0 +1,66 @@
+{
+  "skill": "trend-following-entry",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》 静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "这只股今年已经翻倍了,位置这么高我还敢追吗?怕买在顶上",
+      "expected_behavior": "应激活 trend-following-entry, 把'涨太多/恐高'重框为'创新高 = 全员认可 + 套牢盘解放 = 最强趋势信号',并强调只跟随不预判、等小回调分批上车(具体仓位动作交 scale-in-and-risk-control)",
+      "notes": "正面场景: A2 语言信号 #1 '它已经翻倍了还敢追吗/恐高'。description 明列'涨太多还敢不敢追'。中英混合(fear of heights)。无技术词"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "It just broke out to an all-time high, but chasing here feels risky — should I wait for a pullback or just skip it?",
+      "expected_behavior": "应激活 trend-following-entry, 解释新高是最简趋势信号、回调是小概率但回调分批跟随长期正期望,不要因恐高去买同板块还没涨的弱势股",
+      "notes": "正面场景: A2 'all-time high / chasing / fear of heights'(EN triggers)。直击 description 的'创新高/追高'核心触发词"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "手里这只票已经赚了不少,趋势挺好的,但我总觉得涨太多了总要回调,该不该先落袋为安躲过这一波?",
+      "expected_behavior": "应激活 trend-following-entry, 反对主升浪中预判见顶/反复做 T,只要景气度不变就死拿;前提是先用 prosperity-and-inflection 确认景气未拐头",
+      "notes": "正面场景: A2 #2 '主升浪中动摇想逃顶/落袋为安'。description 明列'主升浪中想逃顶'。注意:判断'何时卖'的执行属 hold-or-cut-exit,本 skill 只给'别逃顶'的哲学"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "我看别人说缠论能精确定位买卖点,我该不该花时间学级别和背驰来找入场点,还是把精力放在读财报选股上?",
+      "expected_behavior": "应激活 trend-following-entry, 主张择时精力应让位于选股,用单一可观测事实(创新高)替代复杂择时,否定 K 线级别精算;但若用户要的是具体点位计算则不在本 skill 范围",
+      "notes": "正面场景: A2 #5 + B 段'timing vs selection/缠论'。description 明列'在缠论择时与选股间纠结'。属于哲学层'是否该择时',非点位精算"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我已经决定买这只了,但手里就这么多钱,是该一次性梭哈还是分三批?每批之间跌多少加一次?能不能上点杠杆?",
+      "expected_behavior": "不应激活本 skill, 应激活 scale-in-and-risk-control。本 skill 只回答'何时/是否该买'的哲学层(创新高=信号、只跟随不预判),不回答'买多少/怎么分仓/红线在哪/能否加杠杆'的执行层",
+      "notes": "跨 skill 诱饵(硬性): 指向 scale-in-and-risk-control('回调分仓 + 仓位风控两条红线',composes-with)。本 skill 给'上车信号',那个给'上车动作'。SKILL.md A2 与 B 段均明确此切分"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这只股我拿着亏了快二十个点了,季报也不太好看,到底是该止损走人还是再扛一扛等回来?",
+      "expected_behavior": "不应激活本 skill, 应激活 hold-or-cut-exit。本 skill 默认'景气度不变'为硬前提,一旦基本面恶化/亏损止损即转出本 skill;本 skill 不判'该卖吗/止损止盈在哪'",
+      "notes": "跨 skill 诱饵(硬性): 指向 hold-or-cut-exit('持盈止损卖出框架',composes-with scale-in-and-risk-control)。B 段判停条件明示'景气拐头→转交 hold-or-cut-exit'"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "想了解一下最近新能源车销量数据怎么样,这个行业今年还能不能起来?",
+      "expected_behavior": "不应激活本 skill, 这是纯行业信息查询/景气度研判, 既非'是否跟随趋势'也非'何时买'。若深入到景气拐点判断可转 prosperity-and-inflection",
+      "notes": "无关诱饵: description 明列'不用:纯信息查询'。非买入哲学、非择时纠结"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "这只股刚创了历史新高,但它最新一季的财报营收增速明显下滑,行业也有见顶的声音,这种创新高还能算趋势信号吗?",
+      "expected_behavior": "本 skill 应执行前置校验后判停: 创新高 + 景气度拐头 = 末端冲顶而非趋势信号,转交 prosperity-and-inflection 判景气、转 hold-or-cut-exit 处理止盈。即'创新高'只在景气度不变 + 真 α 上有效",
+      "notes": "边界(B 段核心): description 与 B 段反复强调'创新高/强者恒强/概率优势全部依赖景气度不变且标的为真 α'。景气拐头则本 skill 整套逻辑失效。本条检验 skill 是否会盲信新高信号"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 8 条: 4 should_trigger(翻倍恐高/创新高犹豫/主升浪逃顶/缠论择时) + 3 should_not_trigger(其中 2 条跨兄弟诱饵: scale-in-and-risk-control 管仓位分仓、hold-or-cut-exit 管卖出止损; 1 条无关) + 1 edge_case(B 段景气拐头边界)。全部 should_not_trigger 必须通过(诱饵容错为 0)。prompts 均为真实口吻一句话、中英混合、无技术术语;每条 notes 说明归属理由与诱饵指向。"
+}

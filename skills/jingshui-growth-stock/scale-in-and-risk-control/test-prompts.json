@@ -1,0 +1,66 @@
+{
+  "skill": "scale-in-and-risk-control",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》— 静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我看好一只股，研究得挺透了，该一次性满仓还是分几次买？",
+      "expected_behavior": "应激活 scale-in-and-risk-control, 给出回调分批介入的节奏建议并强调不追高一次性满仓、单票仓位设上限、无杠杆。",
+      "notes": "A2 场景1: 已锁定标的、纠结买多少/分几仓, 命中'一次性满仓还是分批'语言信号。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我那只票最近回调了一波，要不要补一档？越跌越买行不行？",
+      "expected_behavior": "应激活 scale-in-and-risk-control, 先做景气度前置判停, 景气不变则按预设价位分批补仓; 景气拐头则停止补仓转止损。",
+      "notes": "A2 场景2: 回调补仓 + '越跌越买行不行'语言信号, 落在仓位与建仓节奏上。"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "This is the one I'm most sure about, should I just go all-in or maybe use some leverage to maximize it?",
+      "expected_behavior": "应激活 scale-in-and-risk-control, 显式拒杠杆、拒单吊梭哈, 给出分仓结构与单票上限。",
+      "notes": "A2 场景3 + all-in/leverage 英语信号, 触发两条绝对红线的硬约束。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "新手刚入市，手上一笔钱打算买三只票，每只仓位大概怎么分、分几档建？",
+      "expected_behavior": "应激活 scale-in-and-risk-control, 给出单票仓位上限、总持仓标的数、回调分批档位规划。",
+      "notes": "A2 场景5: 新建仓位规划资金结构, 命中 position sizing / 分几仓信号。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这只票刚创新高了，现在是趋势起来了，我能不能追进去？",
+      "expected_behavior": "不应激活本 skill, 应激活 trend-following-entry: 用户问的是'何时买'的趋势信号判断, 不是'买多少'。",
+      "notes": "跨 skill 诱饵 (硬性): 指向 trend-following-entry — 该 skill 管'创新高=趋势信号、何时进场', 本 skill 只管仓位与建仓节奏。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "我手里这只已经赚了不少, 最近感觉基本面有点变, 是不是该卖了？",
+      "expected_behavior": "不应激活本 skill, 应激活 hold-or-cut-exit: 用户已持仓且在问'该卖吗', 是止盈/止损决策。",
+      "notes": "跨 skill 诱饵 (硬性): 指向 hold-or-cut-exit — 本 skill 只管'怎么把钱放进去', 买入后即移交。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "最近这个新能源板块景气度到底拐没拐？还能不能继续看多？",
+      "expected_behavior": "不应激活本 skill, 应激活 prosperity-and-inflection: 用户在问体系总开关'景气度是否变化', 不是仓位结构。",
+      "notes": "跨 skill 诱饵 (硬性): 指向 prosperity-and-inflection — 本 skill 把它的判断作为前置判停条件, 不替代它做景气判断。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "书里说'敢不敢全身价压上', 那我最看好的这只直接梭哈满仓压上去对吧？",
+      "expected_behavior": "应激活本 skill 但给出纠偏: '全身价压上'是质量筛选器不是仓位指令, 应分仓执行、不单吊梭哈 (对应 ce28 陷阱)。",
+      "notes": "B 段边界 (高频误读): 用户误把 minimalist-focus 的筛选器当仓位指令, 激活后必须显式区分筛选器 vs 仓位红线。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "8 条: 4 should_trigger + 3 should_not_trigger + 1 edge_case。全部 should_not_trigger 必须通过 (诱饵容错 0); 3 条诱饵均为跨兄弟 skill 场景 (硬性≥1 已超额), 分别指向 trend-following-entry / hold-or-cut-exit / prosperity-and-inflection, 防止同书相邻 skill 互相抢调用。edge_case 落在 B 段最高频误读 (ce28 全身价压上→单吊梭哈)。prompt 全部口吻化、无技术词, 中英混合 (should-trigger-03)。"
+}

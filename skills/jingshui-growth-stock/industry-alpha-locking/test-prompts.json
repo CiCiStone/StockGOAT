@@ -1,0 +1,73 @@
+{
+  "skill": "industry-alpha-locking",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "这轮 AI 行情我该买哪只，板块里几十只票挑花眼了",
+      "expected_behavior": "应激活 industry-alpha-locking, 用两问法锁定最景气细分（光模块/算力/PCB 等），再用三特征（创新高+业绩超预期+板块效应）筛出 1-3 只候选 α，并主动列出杂毛黑名单",
+      "notes": "正面场景 A2-1：板块行情已启动，用户要在同板块几十只票里选具体标的，正中'选谁'的核心职能"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "主线天天涨，我手里这只同板块的票就是不涨还跌，到底该不该换",
+      "expected_behavior": "应激活 industry-alpha-locking, 识别这是典型的'杂毛被虹吸'（它涨你跌），用三特征验证用户持仓大概率缺创新高/超预期/板块效应中两条以上，建议换到核心 α",
+      "notes": "正面场景 A2-2：持仓弱势股不涨甚至跌，是杂毛被虹吸的典型信号"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "光模块那几只龙头涨太猛太贵了，同板块里有没有还没涨的便宜的能上车",
+      "expected_behavior": "应激活 industry-alpha-locking, 识别用户正踏入'买杂毛'陷阱（嫌贵找便宜替代），明确警示会被 α 虹吸、出现'它涨你跌'，结论给'宁可买贵的 α 不买便宜的杂毛'",
+      "notes": "正面场景 A2-3：因嫌龙头贵想找便宜替代，正是 B 段 ce19 失败模式与 ce08 穷人思维的反面教材入口"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "which stock is the leader of this EV battery rally, I'm torn between the top 3 names",
+      "expected_behavior": "应激活 industry-alpha-locking, 对用户列出的多只候选用三特征做结构化取舍，给出'买谁、不买谁、为什么'，并区分'行业龙头（看市值）'与'行业 α（看本轮弹性与资金认可）'",
+      "notes": "正面场景 A2-5 + 英文 trigger：同板块多只候选取舍，且英文'find the leader / which to pick in this sector'是 SKILL.md 明确列出的语言信号"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这家公司过去三年复合增速 30%、ROE 20%、行业空间还很大，它算不算超级成长股",
+      "expected_behavior": "不应激活 industry-alpha-locking, 应激活 super-growth-stock-criteria, 因为这是在问'单只股够不够格当超成长'（资质准入），不是问'这轮行情选谁当龙头'",
+      "notes": "跨 skill 诱饵：兄弟 skill super-growth-stock-criteria 的场景。SKILL.md A2 段明确区分'够不够格'（六标准）vs'这轮选谁'（本 skill）"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "我看上的那只已经连续创新高了，现在追进去合适吗，什么时候买",
+      "expected_behavior": "不应激活 industry-alpha-locking, 应激活 trend-following-entry（必要时 composes scale-in-and-risk-control）, 因为这是在问'何时买/能否上车'（买入时机），不是'选谁'。同一个'创新高'信号在本 skill 里是识别 α 的指纹，在 trend-following 里才是买入动作",
+      "notes": "跨 skill 诱饵：兄弟 skill trend-following-entry 的场景。SKILL.md A2 段明确指出同一信号（新高）在两个 skill 里职能不同"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "怎么把家里的房贷还清、子女教育金和养老金做一份十年规划",
+      "expected_behavior": "不应激活 industry-alpha-locking, 该问题属于家庭财富/人生路径规划，与本 skill（行情选龙）完全无关，应激活 ten-year-wealth-path 或不激活任何投资 skill",
+      "notes": "无关诱饵：个人理财/人生规划，验证 skill 的负向召回控制，不会被'财富''十年'等宽泛词误触"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "宁德时代这种涨了十倍的龙头我看着就害怕不敢买，是不是该等它回调或者找个没怎么涨的同板块票",
+      "expected_behavior": "应激活 industry-alpha-locking, 识别这是 B 段 ce07'恐高不敢买核心 α'的失败模式：把'绝对价格高'误等同'估值高/泡沫大'。应给'宁可买贵的 α 不买便宜的杂毛'，但必须叠加 B 段批判段提示——α 主升浪前常有 30-40% 回撤，'死拿腰斩'对绝大多数人不可承受，建议配合 scale-in-and-risk-control 的回调分仓降低心理压力。判停：若用户明确表达'无法承受任何回撤'则转风控类 skill",
+      "notes": "边界（B 段失败模式 ce07）：表面像'选谁'（找替代票），实则是'恐高'心理障碍。本 skill 应激活并破除恐高，但要叠加 B 段盲点（心理承受力假设）的批判提示，避免把方法论输出当确定赢家"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "我买了同板块那只没怎么涨的票，结果龙头天天涨我这只天天阴跌，现在该割肉换过去还是再等等",
+      "expected_behavior": "倾向激活 industry-alpha-locking 识别'杂毛被虹吸、它涨你跌'（ce19），用三特征复核持仓确属杂毛后建议换 α；但需在执行层叠加 hold-or-cut-exit 的'看错止损'逻辑决定割肉时机与仓位，不能由本 skill 单独给出'立即割肉'的执行指令",
+      "notes": "边界（B 段失败模式 ce19 + 跨 skill composes）：既涉及'选谁'（本 skill 主职能）又涉及'何时卖弱势仓'（hold-or-cut-exit）。合理判定是激活本 skill 做诊断，并 composes 卖出框架做执行，二者不可混淆"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 9 条：4 should_trigger（含中英混合：AI 选龙 / 杂毛不涨 / 嫌贵找便宜 / EV 三选一）+ 3 should_not_trigger（含 2 跨兄弟诱饵：super-growth-stock-criteria 够不够格、trend-following-entry 何时买；1 无关：家庭十年理财）+ 2 edge_case（B 段边界：恐高不敢买龙头 ce07、买杂毛被虹吸 ce19）。全部 should_not_trigger 必须通过（诱饵容错为 0）。prompt 全部为真实口吻一句话、无技术词。跨 skill 诱饵指向：super-growth-stock-criteria（资质准入 vs 行情选龙）、trend-following-entry（何时买 vs 选谁，同一'创新高'信号职能切分）、ten-year-wealth-path（无关负召回）、hold-or-cut-exit（edge 中 composes 执行层）。"
+}

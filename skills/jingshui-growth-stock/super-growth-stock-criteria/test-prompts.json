@@ -1,0 +1,73 @@
+{
+  "skill": "super-growth-stock-criteria",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "朋友推荐了一只票叫寒武纪，说能涨10倍，帮我看看它到底够不够格？",
+      "expected_behavior": "应激活 super-growth-stock-criteria, 并 <六维逐条打分过滤>",
+      "notes": "命中 A2 语言信号 '能涨10倍' + '够不够格'，用户拿着一只具体股票做资质判定，是 skill 的主用例。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "这只票业绩增速有60%多，最近又创新高了，是不是 super growth stock 苗子，值不值得重仓？",
+      "expected_behavior": "应激活 super-growth-stock-criteria, 并 <六维逐条打分过滤>",
+      "notes": "命中 A2 信号 'super growth stock' + '创新高' + '值不值得重仓'，且自带维度①⑤证据，正中触发场景。"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我手里这三只候选都说是新能源龙头，能不能帮我用六条标准筛一下，哪些是真货哪些是杂毛？",
+      "expected_behavior": "应激活 super-growth-stock-criteria, 并 <六维逐条打分过滤>",
+      "notes": "命中 A2 信号 '六条标准' + '筛' + '杂毛'，对多只候选做减法，是六维过滤的典型场景（注意：仅做资质判定，不回答选哪只龙头）。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "帮我过一遍这只股的 six criteria，看看它强在哪、弱在哪、哪条是硬伤。",
+      "expected_behavior": "应激活 super-growth-stock-criteria, 并 <六维逐条打分过滤>",
+      "notes": "命中 A2 信号 'six criteria' + '过一遍' + '硬伤'，用户主动要求结构化体检，是 E 段执行步骤的直接对应。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这轮 AI 行情里到底该选哪只龙头？光模块和算力哪个才是风暴之眼？",
+      "expected_behavior": "不应激活本 skill, 应激活 industry-alpha-locking（横向选标的/锁龙头）；本 skill 只做纵向资质判定，不回答'该买哪只'",
+      "notes": "跨 skill 混淆诱饵：'该选哪只龙头''风暴之眼'是 industry-alpha-locking 的语言信号，与本 skill 的'这只够不够格'职责严格区分（见 A2 与邻 skill 区分段）。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "半导体现在景气度到拐点了吗？周期是不是该起来了，现在能抄底吗？",
+      "expected_behavior": "不应激活本 skill, 应激活 prosperity-and-inflection（判行业景气方向/识别拐点）；本 skill 的前提是景气度已确认向上，不回答拐点判断",
+      "notes": "跨 skill 混淆诱饵：'景气度''拐点''抄底'是 prosperity-and-inflection 的语言信号。景气度是总开关，先于六标准（B 段明列此前置依赖）。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "我手里这只票被套了30%，到底该补仓摊低成本还是止损走人？",
+      "expected_behavior": "不应激活本 skill, 应激活 hold-or-cut-exit（持盈止损卖出框架）；本 skill 不涉及买卖点/仓位/止盈止损",
+      "notes": "完全无关诱饵：问的是持仓处置而非标的资质判定，B 段明列'想问什么时候卖'不该用本 skill。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "这只元宇宙概念股连亏三年了，但最近蹭上题材天天涨，过一下六标准看看能不能进？",
+      "expected_behavior": "应激活本 skill 但快速淘汰：连亏损+纯炒概念在维度①即硬伤（'不买亏损公司''没有业绩、纯炒概念直接排除'），按 E 段判停条件跳过完整六维直接给淘汰结论，不逐条打分",
+      "notes": "边界（B 段）：纯概念股/亏损公司连维度①都过不了，不需要走完整六维，是判停场景而非不触发——skill 仍激活但用于'快速排除'。"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "贵州茅台有垄断定价权、护城河很深、估值也合理，按这套标准它算不算够格的超级成长股？",
+      "expected_behavior": "应激活本 skill 并指出标准混用：六标准看'增速≥40%/供不应求/创新高'属景气成长路径，与价值投资的'垄断/定价权/低估值'不可混用（B 段明列此项混淆）；按六标准逐条打分，不强加价投框架",
+      "notes": "边界（B 段邻近方法论混淆）：用户带价值投资预设（垄断定价权/低估值）来套六标准，应澄清两套标准不可混用，但仍走六维打分给出明确够格/不够格判定。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 9 条：4 条 should_trigger + 3 条 should_not_trigger（其中 2 条跨 skill 兄弟混淆：industry-alpha-locking、prosperity-and-inflection）+ 2 条 edge_case（纯概念股判停、与价投标准混用）。全部 should_not_trigger 必须通过（诱饵容错为 0）。darwin 用于校验 trigger 精度与跨 skill 边界判别。"
+}

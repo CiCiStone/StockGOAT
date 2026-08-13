@@ -1,0 +1,66 @@
+{
+  "skill": "seven-retail-sins",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》 静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "今年亏了快四十个点，复盘下来又是赚一点就跑、套牢就死扛，到底栽在哪个毛病上？",
+      "expected_behavior": "应激活 seven-retail-sins, 启动七条逐条自检，把'赚一点就跑'对位通病 3 拿不住盈利、'套牢死扛'对位通病 4 舍不得止损，并指出二者是处置效应的两面，挑出主因后桥接到 hold-or-cut-exit 给执行框架。",
+      "notes": "正面场景：用户主动要求复盘亏损主因并列举具体行为症状（卖飞+死扛），是 A2 触发场景 1（复盘亏损求因）的典型话语，description 的核心触发词全部命中。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "那只龙头股创新高我恐高不敢买，转头去抄了一个还在跌的便宜货，结果错过了主升浪，我这是不是散户通病？",
+      "expected_behavior": "应激活 seven-retail-sins, 逐条对照定位到通病 1 穷人思维（贪便宜低位股）与通病 2 恐高症（创新高不敢买转去抄弱势股），并说明二者同源——'恐高是穷人思维的延伸'，再指向 trend-following-entry 作解药。",
+      "notes": "正面场景：'恐高不敢买龙头''便宜货''错过主升浪'是 A2 语言信号的高浓度组合，且用户主动问'是不是通病'，命中触发场景 2（行为自检）。"
+    },
+    {
+      "id": "should_trigger-03",
+      "type": "should_trigger",
+      "prompt": "I keep selling my winners the moment they're up 20%, then watch them double without me. Why can't I hold winners?",
+      "expected_behavior": "应激活 seven-retail-sins, 把'卖飞盈利股'对位通病 3 拿不住盈利，引用处置效应与'卖飞比套牢更致命'机制，给出'持盈不止盈、止盈只看基本面拐点'的指向（hold-or-cut-exit）。",
+      "notes": "正面场景：英文 trigger 'can't hold winners' / 'selling winners too early' 是 A2 明文列出的语言信号，跨语言一致性测试。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "天天盯盘追涨杀跌忙得很充实，一个月换了几十次仓，结果还是没赚到钱，我是不是哪里出问题了？",
+      "expected_behavior": "应激活 seven-retail-sins, 把'每天忙进忙出'对位通病 5 频繁交易，说明短线越短越趋近随机游走且掠夺研究时间，并指出可能并发通病 7 分散注意力，指向 minimalist-focus 作减法解药。",
+      "notes": "正面场景：'天天看盘忙得很充实但赚不到钱''追涨杀跌'是 A2 语言信号原文，命中触发场景 5（反复犯同一错误）。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我一直长期持有这只股，越跌越补，这算不算正宗的价值投资？",
+      "expected_behavior": "不应激活 seven-retail-sins, 应激活 real-vs-fake-value-investing——用户在辨析'长期持有=价投''越跌越买=价投'的认知误区，而非自检行为通病。",
+      "notes": "跨 skill 混淆诱饵（硬性要求项）：指向 real-vs-fake-value-investing。SKILL.md 的 description 与 A2/B 段都明文划线——认知误区辨析归前者，行为通病清单归本 skill。用户问'算不算价投'是认知层判断，不是行为自检。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "我决定要持盈止损了，具体现在这只盈利 30% 的该不该卖、止损线设在哪？",
+      "expected_behavior": "不应激活 seven-retail-sins, 应激活 hold-or-cut-exit——用户已经知道问题、要的是纪律执行动作（怎么卖/止损线），不是要七条自检定位病灶。",
+      "notes": "跨 skill 混淆诱饵：指向 hold-or-cut-exit。B 段明文：'要的是纪律执行动作而非自检'直接跳到 hold-or-cut-exit，不要停在'你这是通病 3'的诊断层。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "怎么用一杯星巴克的钱买到一栋楼的回报？最近太忙了想了解下基金定投入门。",
+      "notes": "无关诱饵：纯闲聊/科普咨询，与七条行为通病自检无关，不应触发任何本书 skill。验证 agent 不会因'回报''投资'等泛词误激活。",
+      "expected_behavior": "不应激活 seven-retail-sins, 也无需激活本书任何 skill，属于无关场景。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我满仓加两倍杠杆单吊了一只题材股，这算你说的散户通病里的哪一条？",
+      "expected_behavior": "激活 seven-retail-sins 后应诚实承认：'加杠杆''单吊梭哈''追逐题材概念股'不在作者列举的七条之内，按 B 段'七条未穷尽'的指引不要硬套，可直接说明这属于未列入的高危项，并提示风控缺失叠加杠杆是比七条更致命的复合风险；不要把它勉强归到通病 1 或通病 7。",
+      "notes": "边界场景：B 段'七条未穷尽'与'彼此重叠'的硬性测试。作者清单非穷尽式分类，agent 必须能在症状不在七条内时承认局限，而非强行对位——这是反向清单 skill 最容易出错的边界。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 8 条：4 should_trigger（覆盖 A2 触发场景 1/2/3/5 + 中英混合）+ 3 should_not_trigger（全部 should_not_trigger 必须通过，诱饵容错为 0）+ 1 edge_case。跨 skill 混淆诱饵 2 条：should-not-trigger-01 指向 real-vs-fake-value-investing（认知误区辨析 vs 行为通病），should-not-trigger-02 指向 hold-or-cut-exit（执行动作 vs 自检定位）；description 另列的 minimalist-focus 解药诱饵由 should-trigger-04 内部桥接覆盖，避免与 should-not-trigger 重复。edge-01 测试 B 段'七条未穷尽/彼此重叠'边界。"
+}

@@ -1,0 +1,80 @@
+{
+  "skill": "real-vs-fake-value-investing",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我拿着这只票三年了，一直浮亏，我是做价投的，再熬几年总能回本吧？",
+      "expected_behavior": "应激活 real-vs-fake-value-investing, 先用景气度方向判真伪(不看持有时长)，再点出误区1长线持有≠价投，若景气向下则建议转 hold-or-cut-exit 执行止损",
+      "notes": "A2 触发场景1+语言信号: 自称价投/长期持有/持续亏损, 典型伪价投怀疑链。判真伪不看时长只看景气度方向。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "It's down 40% from my cost, Warren Buffett says buy wonderful companies cheaper — should I keep averaging down on this one?",
+      "expected_behavior": "应激活 real-vs-fake-value-investing, 校验前提(是否超级成长股+景气度是否已变), 点出误区2越跌越买有前提, 基本面恶化则立即失效",
+      "notes": "A2 触发场景2+语言信号(英): averaging down / 巴菲特金句。直接命中误区2的偷换前提陷阱。"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "这次又亏了，主要是我太贪没及时跑、心态不稳，把情绪控制练好就行了。",
+      "expected_behavior": "应激活 real-vs-fake-value-investing, 纠正归因: 亏损核心是认知不足不是心态, 点出误区3, 指出归咎心态会阻止认知迭代",
+      "notes": "A2 触发场景3+语言信号: 复盘甩锅心态。直击误区3 ce16。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "打板做短线,争取三年做到 A8,这条路走得通吧?",
+      "expected_behavior": "应激活 real-vs-fake-value-investing, 点出误区4短线致富幻想: 短线有资金量天花板, A9/A10 全是中长线, 建议转中长线成长投资框架",
+      "notes": "A2 触发场景4+语言信号: 短线致富/A8目标。命中误区4 ce17。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我总是赚一点就跑、亏了死扛,还爱频繁换股,这些毛病怎么改?",
+      "expected_behavior": "不应激活本 skill, 应激活 seven-retail-sins (查行为通病自检清单: 拿不住/不止损/频繁交易等具体错动作)",
+      "notes": "跨 skill 诱饵(指向 seven-retail-sins): 用户在罗列具体错动作, 是行为层通病清单场景, 不是认知层的身份/标签错配。本 skill 查'你以为是价投其实不是', 那个 skill 查'你做了哪些错动作'。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这只票已经是伪价投了,我现在到底该在哪个价位砍掉?",
+      "expected_behavior": "不应激活本 skill, 应激活 hold-or-cut-exit (拐点止损/止盈的动作执行)",
+      "notes": "跨 skill 诱饵(指向 hold-or-cut-exit): 用户已认出伪价投, 现在要的是'怎么砍'的动作, 不是'是不是伪价投'的诊断。本 skill 是前置诊断, 那个 skill 是后置执行。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "怎么从财报和研报里判断这只票的景气度到底是向上还是向下?",
+      "expected_behavior": "不应激活本 skill, 应激活 prosperity-and-inflection (景气度方向怎么测出来的证据收集方法)",
+      "notes": "跨 skill 诱饵(指向 prosperity-and-inflection): 用户要的是'景气度本身怎么测', 本 skill 只调用其结论判真伪、不重新做证据收集。混淆会让本 skill 越界丧失辨析纯粹性。"
+    },
+    {
+      "id": "should-not-trigger-04",
+      "type": "should_not_trigger",
+      "prompt": "我女朋友非要看新出的那部韩剧好不好看,值不值得追?",
+      "expected_behavior": "不应激活本 skill, 与投资完全无关",
+      "notes": "无关诱饵: 纯日常娱乐话题, 测试 skill 不会对无关内容误触发。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "这公司财报还行但我看不清它景气度到底往哪走,我是不是真价投?",
+      "expected_behavior": "可激活本 skill但应触发判停: 景气度方向证据不足时不下'真价投'结论, 告知用户'暂无法判真伪, 先补财报与产业证据', 建议先转 prosperity-and-inflection 测方向再回来判真伪",
+      "notes": "B 段边界+盲点: 判真伪唯一标尺是景气度方向, 但景气度本身难测、依赖信息优势。证据不足时存在'误判为真价投而死扛'的隐性风险, 故判停不轻易下结论。"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "白酒之前去库跌成那样算伪价投,那要是现在重新进入上行周期,是不是又变回真价投了?",
+      "expected_behavior": "应激活本 skill 并明确告知: 真伪判定随景气度周期翻转, 白酒重新上行后从'伪价投'反转为'真价投', 不是一次性永久标签; 但仍需校验标的够格(超级成长股)+三道能力门槛",
+      "notes": "B 段边界+盲点(A股+特定历史阶段假设): '白酒去库=伪价投'在白酒重回上行后判定会反转。本 skill 的真伪结论绑定景气方向, 会随周期翻转, 这是特性不是缺陷, 但需向用户点明以免被当成永久标签。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 10 条: 4 条 should_trigger(覆盖 A2 五大场景与四大误区中的1/2/3/4)、4 条 should_not_trigger(含 3 条跨兄弟 skill 诱饵: seven-retail-sins 行为通病清单 / hold-or-cut-exit 止损动作执行 / prosperity-and-inflection 景气度怎么测 + 1 条无关诱饵)、2 条 edge_case(景气度难测真伪难判判停 / 白酒重新上行后判定反转)。所有 should_not_trigger 必须通过(诱饵容错为 0)。判真伪的唯一标尺是景气度方向, 不看持有时长/自我标签/是否浮亏。"
+}

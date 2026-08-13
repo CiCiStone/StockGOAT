@@ -1,0 +1,73 @@
+{
+  "skill": "prosperity-and-inflection",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我手里这只消费股从高点跌了快60%，都到历史低位了，现在能抄底吗？",
+      "expected_behavior": "应激活 prosperity-and-inflection，先校验是否超级成长股/强周期股，再用财报+产业跟踪判断景气方向是‘向上/持平/向下拐头’，并明确回答‘价格波动 vs 基本面拐点’，不凭位置低直接抄",
+      "notes": "A2.1 典型抄底诉求——用户用‘跌得多/历史低位’要结论，本 skill 负责把判断锚回景气度证据链"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "这只 AI 产业链的票回撤 30% 了，景气度到底还向不向上，拐点到了吗？",
+      "expected_behavior": "应激活 prosperity-and-inflection，扫描财报关键词(供不应求/订单/价格中枢)区分‘情绪估值冲击’与‘财报向下信号’，给出当前景气方向判断",
+      "notes": "A2.2 持仓大幅回撤后纠结景气是否变了——本 skill 是体系总开关的核心激活场景"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "is the bottom in for this stock, or is the cycle inflection still not here?",
+      "expected_behavior": "应激活 prosperity-and-inflection，强调‘只确认不预测’，要求等财报清晰展现拐点信号，证据不足时默认按未确认处理",
+      "notes": "A2 语言信号英文版——is the bottom in / cycle inflection，触发本 skill 的不预测原则"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "周期股跌了好几年了，这财报出来能不能确认景气拐点，该不该小仓位先试试？",
+      "expected_behavior": "应激活 prosperity-and-inflection，按‘财报先行确认 + 小仓位试错 + 拐点确认后加仓’的周期底部布局路径回应，禁止因跌得多就重仓抄底",
+      "notes": "A2.5 周期底部左侧布局——本 skill 的典型应用之一(c16 案例)"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我判断这票基本面已经拐头向下了，现在该砍仓还是该止盈，仓位怎么处理？",
+      "expected_behavior": "不应激活本 skill，应激活 hold-or-cut-exit（拐点已确认后的卖出/止损执行框架）",
+      "notes": "跨 skill 诱饵 → hold-or-cut-exit：本 skill 只负责‘判断拐点是否到来’，不负责拐点之后的买卖动作；用户已假定拐点确认，越界进入卖出执行"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "确认了景气还在向上，现在回调了，我该不该补仓、怎么分批加、加多少仓位？",
+      "expected_behavior": "不应激活本 skill，应激活 scale-in-and-risk-control（回调分仓买入 + 仓位风控两条红线的执行）",
+      "notes": "跨 skill 诱饵 → scale-in-and-risk-control：本 skill 已完成‘景气度不变’的前置判定，剩下的越跌越买/分仓动作交给那个 skill 执行"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "帮我看看这只票今天的 K 线，是不是要反转了，能不能跟进？",
+      "expected_behavior": "不应激活本 skill，应转向趋势跟随/技术分析类（本 skill 证据是财报+产业跟踪，不看 K 线形态）",
+      "notes": "纯择时诱饵——B 段明确‘只想问 K 线反转信号时本 skill 不适用’，且作者体系不鼓励技术择时"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "这行业已经在历史最低位了，但最近一份财报还没出来，产业里也没啥明确信号，能抄吗？",
+      "expected_behavior": "倾向不激活完整判断流程——本 skill 的边界是‘财报尚未发布、产业证据空白时不能下已拐头结论’，应告知用户‘当前证据不足以确认拐点，默认按未确认处理’，且不鼓励因位置低就抄（对应 ce03 失败模式）",
+      "notes": "B 段边界：证据不足状态。低位≠便宜，财报缺位时本 skill 主动降级为‘等财报’，而非给出抄底建议"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "财报刚发出来增速确实在掉，但股价已经从高点回撤 25% 了，现在确认拐点是不是太晚了？",
+      "expected_behavior": "应激活本 skill 并坦承‘财报清晰展现有滞后性’（B 段盲点）——确认拐点只能事后，止盈价位可能已显著低于高点，这是体系固有代价；判断成立后移交 hold-or-cut-exit 执行",
+      "notes": "B 段盲点测试：财报滞后性。本 skill 应诚实告知‘只确认不预测’的代价，而非假装能逃顶"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 9 条：4 should_trigger + 3 should_not_trigger + 2 edge_case。跨 skill 诱饵 2 条，分别指向 hold-or-cut-exit（拐点确认后的卖出执行）与 scale-in-and-risk-control（越跌越买的仓位执行）——本 skill 是前置判断件，只判拐点不做买卖动作；另有 1 条纯择时诱饵(技术形态)与 1 条无关倾向。edge_case 覆盖 B 段两个关键边界：财报缺位的证据不足状态、财报滞后性导致的事后确认代价。全部 should_not_trigger 须通过（诱饵容错为 0）。"
+}

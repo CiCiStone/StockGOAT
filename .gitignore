@@ -1,0 +1,44 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.conda/
+
+# ===== 本地数据 / 数据库（运行生成，不入库）=====
+dataset/*.db
+dataset/*.db-journal
+dataset/*.db-wal
+dataset/*.db-shm
+dataset/*.sqlite
+dataset/*.sqlite3
+dataset/*.log
+dataset/*.err
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# ===== 运行时缓存 / 生成产物 =====
+skills/stock-drop-filter/data/*.json
+skills/stock-drop-filter/output/
+*.html.tmp
+
+# ===== IDE / 系统 =====
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 敏感配置 =====
+.env
+*.key
+*.pem

@@ -1,0 +1,80 @@
+{
+  "skill": "minimalist-focus",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》 静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "最近 AI 算力、固态电池、创新药好几个板块都在涨，我是不是每个都分点仓位去蹭一下，免得踏空？",
+      "expected_behavior": "应激活 minimalist-focus, 跑'全身价压筛选器'逐个标的判定敢不敢全压, 不敢的归入放弃区直接屏蔽, 校正'蹭一点=安全'的分散认知",
+      "notes": "正面场景: 机会过载 + '分点仓位蹭一下'是 A2 语言信号的核心触发词, 对应 ce13 分散注意力沉迷小机会"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我手里现在拿了七八只票，覆盖四五个完全不相关的赛道，每天盯盘研究忙得不行，结果一年下来收益还不如指数。",
+      "expected_behavior": "应激活 minimalist-focus, 识别注意力稀释的败兵模式(ce01/ce13), 引导用户做专注/放弃二分表, 把精力收回到敢全压的标的",
+      "notes": "正面场景: 注意力稀释, warning sign 命中(持仓>5-8 只 + 勤奋但收益平平), 是本 skill 的典型适应症"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "I just want steady compound returns, like 20% a year and slowly get rich — why are you telling me not to chase every hot name?",
+      "expected_behavior": "应激活 minimalist-focus, 校正财富观错位: 跃迁靠隔三岔五抓一次 10 倍级机会, 不靠每年稳赚 20%, 平时只需投研等待不必梭哈每个热点",
+      "notes": "正面场景: 中英混合 + 财富观错位('稳健复利每年 20%'), 直击 A2 第 3 条与原文核心反直觉点"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "朋友给我推了只票，逻辑我听着也行、估值也不贵，但就是下不去手又舍不得删，到底值不值得我花精力去抓？",
+      "expected_behavior": "应激活 minimalist-focus, 用'敢不敢把全部身价压上去'这一唯一筛选器给出明确敢/不敢判定, 不让用户在'舍不得放弃'上空耗",
+      "notes": "正面场景: 质量存疑 + 语气犹豫, 对应 A2 第 2 条'列举理由却理不出头绪=标的不够好但舍不得放弃'"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这两年我反复亏钱，追高被套、止损又被洗、赚一点就跑错过大涨，到底我这是哪儿出了问题？",
+      "expected_behavior": "不应激活本 skill, 应激活 seven-retail-sins(散户七大通病自检清单)——这是反面诊断'我错在哪', 本 skill 是正面决定'接下来投给谁'",
+      "notes": "跨 skill 诱饵(硬性要求): 指向 seven-retail-sins。七大通病是反面自检清单(诊断已发生错误), 本 skill 是正面注意力分配原则(决定接下来动作), 二者正反互补但职能不同"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这只票我很看好，作者也说敢全身价压上就说明标的好，那我这次是不是该直接满仓单吊一把大的？",
+      "expected_behavior": "不应激活本 skill 输出仓位指令, 应激活 scale-in-and-risk-control(回调分仓+风控两条红线)。本 skill 必须当场澄清:'全身价压上'是质量筛选器(敢不敢)不是仓位指令(要不要)",
+      "notes": "跨 skill 诱饵(关键张力): 指向 scale-in-and-risk-control。这是 ce28 最危险误用路径——把质量筛选器当仓位指令, 单次黑天鹅即重伤。本 skill 触发后也必须重申这层区分"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "我现在手头有 50 万本金，想用十年时间做到千万级别，中间每个阶段大概该做些什么？",
+      "expected_behavior": "不应激活本 skill, 应激活 ten-year-wealth-path(十年千万财富跃迁路径)——这是整合型路径规划, 极简专注只是其哲学基础之一",
+      "notes": "跨 skill 诱饵: 指向 ten-year-wealth-path。用户要的是阶段化路径图(储蓄/保本/全职投研), 不是单点的注意力筛选"
+    },
+    {
+      "id": "should-not-trigger-04",
+      "type": "should_not_trigger",
+      "prompt": "我下周要去三亚玩四天，帮我看看天气怎么样，再推荐几个不踩雷的本地馆子。",
+      "expected_behavior": "不应激活本 skill, 与投资/注意力分配完全无关, 直接答即可",
+      "notes": "无关诱饵: 纯生活场景, 测试 skill 是否会误泛化触发"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我看书上写'判断一个标的只问敢不敢把全部身价压上去'，那我现在最看好的这只是不是就该 all-in 把身家梭进去？",
+      "expected_behavior": "本 skill 应被激活(因为用户在引述极简专注的核心筛选项), 但激活后第一动作必须是边界澄清:'全身价压上'是心理质量测试不是仓位命令, 然后才进入筛选流程; 仓位交给 scale-in-and-risk-control",
+      "notes": "边界(ce28 张力): 用户用作者原话为重仓单吊辩护。这是本 skill 最危险的误用路径——应触发但必须当场纠偏, 否则比不触发更糟"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "反正只要找到两只 10 倍股, 两轮牛市下来就能财富自由了, 那我现在是不是专心等下一只超级成长股就行？",
+      "expected_behavior": "本 skill 部分激活: '专心等大机会'的注意力哲学对, 但必须点破乐观承诺的幸存者偏差——'两轮 2 只 10 倍即自由'是理想化叙事, 前瞻胜率无统计支撑, 即便严格按标准筛选 2021 年初同样合格的诸多标的后来腰斩退市",
+      "notes": "边界(B 段盲点): 误把'两轮 2 只 10 倍'当确定承诺。极简专注是必要非充分条件, 需叠加景气度/六条标准/分仓风控才闭环"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 10 条: 4 should_trigger(机会过载/注意力稀释/财富观错位/质量存疑, 含中英混合) + 4 should_not_trigger(3 跨兄弟诱饵指向 seven-retail-sins/scale-in-and-risk-control/ten-year-wealth-path + 1 无关) + 2 edge_case(ce28 误读全身价压上为重仓单吊 / 两轮 2 只 10 倍乐观承诺)。全部 should_not_trigger 必须通过(诱饵容错为 0)。关键张力: '全身价压上'是质量筛选器非仓位指令, 即便本 skill 被激活也必须当场重申这层区分(见 edge-01)。"
+}

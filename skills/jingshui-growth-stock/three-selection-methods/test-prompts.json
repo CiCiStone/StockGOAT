@@ -1,0 +1,73 @@
+{
+  "skill": "three-selection-methods",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我就是个普通上班族，平时也不懂财务，到底怎么才能找到那种能涨十倍的股票啊？",
+      "expected_behavior": "应激活 three-selection-methods, 先按可触达性评估（消费触达 vs 专业时间 vs 产业深度），再把用户分流到三法之一；对不懂财务的上班族通常导向成长观察法",
+      "notes": "A2 触发场景1：零基础入场 + 方法路径迷茫，用户用'普通人/上班族'自报可触达性"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "学投资到现在，技术面、基本面、周期我都想学一点，有没有一个总览告诉我到底该从哪条路下手？",
+      "expected_behavior": "应激活 three-selection-methods, 帮用户收敛三法之一，明确指出'技术择时不是选股法'，按可触达性给一条路径而非什么都学",
+      "notes": "A2 触发场景2/4：方法路径迷茫 + 怀疑自己方法错位，用户在多条路径间犹豫"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "How do people actually find 10x growth stocks? Are there really only a few ways to pick stocks, or is there a Lynch-style approach I can start with?",
+      "expected_behavior": "应激活 three-selection-methods, 给出三法总览（成长观察/财报/周期），并说明三法互斥且按可触达性分流，可特别点出林奇法=成长观察法",
+      "notes": "英文 trigger：how to find 10x stocks / Lynch approach；A2 语言信号命中"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "我在化工厂上了十年班，对有色和化工这行门儿清，像我这种情况炒股该怎么选股？",
+      "expected_behavior": "应激活 three-selection-methods, 识别用户'产业深度触达'强 → 分流到周期选股法，并提示需等财报确认拐点而非猜底",
+      "notes": "A2 触发场景1/3：按可触达性分流，产业深度触达是周期法的典型匹配"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我想专门练财报选股——财报季每天该读多少份、用哪几个关键词去扫，具体怎么操作？",
+      "expected_behavior": "不应激活本 skill, 应激活 financial-report-signals；本 skill 是三法总览与分流器，财报法的具体执行（关键词清单/海量泛读/财报季12小时）由 financial-report-signals 承担",
+      "notes": "跨 skill 诱饵 → financial-report-signals：用户已选定财报法并要执行细节，本 skill 只负责'分流到财报法'这一步，不深化"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "最近家门口开了家奶茶店天天排长队，你说这家公司能不能投、具体我该怎么一步步去研究它？",
+      "expected_behavior": "不应激活本 skill, 应激活 deliberate-observation；用户已锁定成长观察法路径并要具体执行（五新扫描/从观察到投资流程），本 skill 只在'判断该走哪条路'时用",
+      "notes": "跨 skill 诱饵 → deliberate-observation：B 段明确'用户已决定走成长观察法时直接进入 deliberate-observation'"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "今天大盘这么跌，我手里基金定投该不该停？",
+      "expected_behavior": "不应激活本 skill, 这与选股方法无关（是定投/择时/资产配置问题），本体系内也不覆盖此场景",
+      "notes": "无关诱饵：纯噪音问题，与三法选股毫无关联"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我学了两年缠论，背驰级别都搞得挺溜，这算不算一种选股方法？能不能归到你说的几种里？",
+      "expected_behavior": "原则上不激活本 skill 的'选股分流'职能；应明确告诉用户缠论/技术分析属于择时范畴，不是三法之一，并把用户拉回三法（ce18）；若用户接受重定向再讨论选股路径，才转激活",
+      "notes": "边界（B 段 ce18）：技术分析/缠论算不算选股法——作者明确反对，择时与选股不相容；本 skill 在此场景的作用是'劝退+重定向'而非分流"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "我已经盯上某只消费股半年了，公司基本面我也看了，就想让你帮我判一下它到底够不够格成为十倍股。",
+      "expected_behavior": "不应按选股分流处理（用户已锁定单只标的），应转交 super-growth-stock-criteria 用六条标准验证；本 skill 的职责到'已产生候选标的'为止",
+      "notes": "边界（B 段第1条）：已锁定单只要判定'是不是10倍股'是出口验证问题，不是入口分流问题"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "本 skill 是三种选股方法的'总览+分流器'，不是任一单法的深化版。should_not_trigger 中 2 条为跨兄弟 skill 诱饵：财报法深化→financial-report-signals，成长观察法深化→deliberate-observation（B 段明示转交关系）。edge_case 覆盖 B 段两个关键边界：技术分析/缠论非选股法（ce18）、已锁定单只需走六标准出口而非入口分流。所有 should_not_trigger 必须通过（诱饵容错为 0）。"
+}

@@ -1,0 +1,80 @@
+{
+  "skill": "ten-year-wealth-path",
+  "version": "0.1.0",
+  "source_book": "《静水2008：极简成长股投资体系》静水2008",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我刚工作两年，攒了2万块钱，想靠投资十年做到千万，到底该怎么一步步来？",
+      "expected_behavior": "应激活 ten-year-wealth-path, 并 <按当前资金量级(2万级=原始积累+初试牛刀第一步)给出该做什么/不做什么的动作清单 + 讲解跳跃式财富观 + 强制风险警示>",
+      "notes": "命中 A2 语言信号 '2万本金' + '十年千万' + '怎么一步步来'，用户是小资金普通人、明确想要分阶段路线图，正中触发场景①。"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我一个普通人完全没买过股票，想入市第一步该干嘛，别给我讲一堆理论，直接告诉我今天能做什么。",
+      "expected_behavior": "应激活 ten-year-wealth-path, 并 <判停到第一步直接给200交易日5买5卖扫盲法 + 强制启动机制>",
+      "notes": "命中 A2 信号 '入市第一步' + '普通人' + '别讲理论'，典型'准备瘫痪想启动'场景⑤，E 段判停条件：连开户都没做则跳第一步给扫盲法。"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "I have about 200k RMB saved up, how do I scale this into financial freedom over the next decade — what should I actually be doing at this stage?",
+      "expected_behavior": "应激活 ten-year-wealth-path, 并 <定位20万级(小有所成)给出动作=每天自问景气行业/核心α是谁+找第一只10倍股看对死拿，禁止消费升级稀释本金>",
+      "notes": "命中 A2 信号 'scale into financial freedom' + 'at this stage' + 'how do I'，且自带资金量级(20万级)，触发场景②④——按量级反推当前动作。"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "我现在手里有20多万，是该激进追10倍股还是先保守保本金？这个阶段到底该专注什么？",
+      "expected_behavior": "应激活 ten-year-wealth-path, 并 <定位20万级并明确'不买车不消费升级保本金+专心找第一只10倍股看对死拿'，纠正'激进vs保守'伪命题为'按量级定动作'>",
+      "notes": "命中 A2 信号 '20万' + '这个阶段该做什么'，典型'卡在当前阶段不知动作'场景③，skill 价值正在于用量级闸门回答这种纠结。"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "寒武纪这只票够不够格当10倍股，帮我用六条标准过一遍。",
+      "expected_behavior": "不应激活本 skill, 应激活 super-growth-stock-criteria（够不够格的硬清单）；本 skill 是路线图总调度，只说'要抓10倍股'不负责具体判定某只够不够",
+      "notes": "跨 skill 兄弟混淆诱饵：'够不够格''六条标准'是 super-growth-stock-criteria 的语言信号，B 段明列'想问这只股够不够10倍'不该用本 skill（A2 与邻 skill 区分段）。"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这轮AI行情风暴之眼到底该选哪只龙头，帮我锁定核心α。",
+      "expected_behavior": "不应激活本 skill, 应激活 industry-alpha-locking（风暴之眼+强者恒强+锁核心α）；本 skill 第二步只是时序上告诉你'该去问锁α了'，不直接回答锁哪只",
+      "notes": "跨 skill 兄弟混淆诱饵：'风暴之眼''锁核心α''选哪只龙头'是 industry-alpha-locking 的语言信号，A2 区分段明列本 skill 不做标的推荐。"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "我手里这只票涨了三倍现在该止盈还是继续拿，基本面拐点了该卖吗？",
+      "expected_behavior": "不应激活本 skill, 应激活 hold-or-cut-exit（拐点止盈+看错止损卖出框架）；本 skill 是整条路径，第三步执行的是持盈止损但本 skill 不直接回答'何时卖'",
+      "notes": "跨 skill 兄弟混淆诱饵：'该止盈还是拿''拐点''该卖吗'是 hold-or-cut-exit 的语言信号，B 段明列'想问什么时候卖'不该用本 skill。"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我手里有800万，想用十年千万这套路线滚到A9，帮我规划下从现在到上亿的步骤。",
+      "expected_behavior": "应激活本 skill 但触发不适用判停：路径预设'小资金普通人'(无内部信息/能扛长期浮亏)，800万级已进入大资金长线股权投资区间，应明确告知本路径不适用、转提示大资金走垄断/定价权/持续性路径，不强行套用五阶段表",
+      "notes": "边界（B 段超大资金不适用）：E 段步骤1完成标准明列'超大资金/专业机构不要套用本路径'，这是判停而非触发，darwin 应校验 skill 激活后能正确退出而非硬套路线图。"
+    },
+    {
+      "id": "edge-02",
+      "type": "edge_case",
+      "prompt": "看了你说的十年千万路径太对了，那我开户就满仓打板做短线，几个月翻倍直接跨级不就更快吗？",
+      "expected_behavior": "应激活本 skill 并强制纠偏：明确路径明确反短线反技术分析(B 段ce17/ce11)，200交易日5买5卖只是扫盲训练非赚钱手段，第三步是中长线持盈止损；同时重复'这是幸存者路径非保证'+A8/A9是民间黑话非承诺",
+      "notes": "边界（B 段用本路径合理化短线）：用户借路径外壳合理化完全相反的短线策略，是承诺性内容的高风险误用场景，skill 必须当场否定而非顺从——校验 skill 的抗误用能力。"
+    },
+    {
+      "id": "edge-03",
+      "type": "edge_case",
+      "prompt": "按这套十年千万路径走，普通人是不是坚持下来十年后一定能到A8千万级别？",
+      "expected_behavior": "应激活本 skill 并强制拆穿承诺性话术：明确这是理想/幸存者路径非保证(★B段承诺性警告)，依赖前瞻选出并拿住2只10倍股这件极难的事，单票腰斩常见、能扛50%+回撤的人极少，A8/A9是民间黑话非可量化目标；把地图当'路线图+当前动作建议'绝不当'承诺N年到千万'",
+      "notes": "边界（B 段★承诺性/幸存者偏差）：用户把'十年千万'当确定性承诺，是 skill 承诺性内容最危险的误读，darwin 应校验 skill 必发风险警示而非顺承诺语气背书。"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "共 10 条：4 条 should_trigger（含中英混合 should-trigger-03）+ 3 条 should_not_trigger（全部为跨 skill 兄弟混淆诱饵，分别指向 super-growth-stock-criteria 够不够格判定、industry-alpha-locking 选哪只锁α、hold-or-cut-exit 该卖吗，本 skill 是路线图总调度不做具体判定/动作）+ 3 条 edge_case（B 段边界：超大资金800万不适用判停、用本路径合理化短线、把十年千万当确定性承诺）。全部 should_not_trigger 必须通过（诱饵容错为 0）。darwin 用于校验 trigger 精度、跨 skill 路由边界、承诺性内容的抗误用与强制风险警示能力。"
+}
