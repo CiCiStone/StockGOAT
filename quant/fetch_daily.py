@@ -179,11 +179,11 @@ def main():
                 total_days += len(rows)
             if i % args.batch == 0:
                 conn.commit()
-                print(f"[fetch_daily] {i}/{len(stocks)} 累计 {total_days} 条 | {code}")
+                print(f"[fetch_daily] {i}/{len(stocks)} 累计 {total_days} 条 | {code}", flush=True)
             time.sleep(0.05)  # 轻微限速，避免触发风控
 
         conn.commit()
-        print(f"[fetch_daily] 完成: {len(stocks)} 只股票, 累计写入 {total_days} 条日线")
+        print(f"[fetch_daily] 完成: {len(stocks)} 只股票, 累计写入 {total_days} 条日线", flush=True)
     finally:
         bs.logout()
         conn.close()
